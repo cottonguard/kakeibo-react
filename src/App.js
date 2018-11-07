@@ -3,19 +3,25 @@ import './App.css';
 
 import KakeiboSheet from './KakeiboSheet.js';
 import PaymentForm from './PaymentForm.js';
+import AccountContext from './AccountContext.js';
+import LoginForm from './LoginForm.js';
 
-const url = 'DUMMY URL !!!!'
+const url = 'https://script.google.com/macros/s/AKfycbxhKsDyuxQkE6ihqU-2QJAeyo1Zt0AU1dSHl8qfg4o8-2yFQVzn/exec'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      account: {
+        isLogin: true,
+        id: 'dummy_account'
+      },
       loaded: false,
       payments: [],
     }
   }
 
-  componentDidMount() {
+  init() {
     fetch(url + '?action=get-payments', {
       method: 'GET',
       mode: 'cors'
@@ -36,17 +42,11 @@ class App extends Component {
     });
   }
 
-  addPayment(params) {
-    this.setState(state => {
-      state.payments.push({
-        product: params.product,
-        price: params.price
-      })
-      return {
-        payments: state.payments
-      }
-    });
+  componentDidMount() {
+    this.init();
+  }
 
+  addPayment(params) {
     fetch(url, {
       method: 'POST',
       mode: 'cors',
@@ -58,18 +58,33 @@ class App extends Component {
         ...params,
       })
     })
-    .then(res => res.json());
+    .then(res => res.json())
+    .then(res => {
+      if (res.ok) {
+        this.init();
+      }
+    });
   }
 
   render() {
     const { loaded, payments } = this.state;
-    return loaded ? (
-      <div className="App">
-        <PaymentForm onPaymentSubmit={ e => this.addPayment(e) }/>
-        <KakeiboSheet payments={ payments }/>
-      </div>
-    ) : (
-      <div>Loading...</div>
+    return (
+      <AccountContext.Provider className="App" value={ this.state.account }> {/* unused */}
+      {
+        this.state.account.isLogin ? (  // <- Todo: Router tsukaouze
+          loaded ? (
+              <div>
+                  <PaymentForm onPaymentSubmit={ e => this.addPayment(e) } />
+                  <KakeiboSheet payments={ payments } />
+              </div>
+            ) : (
+              <div>Loading...</div>
+            )
+          ) : (
+            <LoginForm />
+          )
+      }
+      </AccountContext.Provider>
     );
   }
 }

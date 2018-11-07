@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
+import KakeiboItem from './KakeiboItem';
 
-export default function(props) {
+export default props => {
   return (
     <div className="kakeibo-sheet">
       {
         props.payments.map(item => (
-          <div className="kakeibo-payment-item" key={ item.id }>
-            { item.product }
-            <strong>
-              { item.price }
-            </strong>
-            円
-          </div>
+          <KakeiboItem key={ item.id } { ...item } />
         ))
       }
     </div>
