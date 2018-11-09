@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
 import './App.css';
 
 import KakeiboSheet from './KakeiboSheet.js';
@@ -67,24 +69,31 @@ class App extends Component {
   }
 
   render() {
-    const { loaded, payments } = this.state;
     return (
-      <AccountContext.Provider className="App" value={ this.state.account }> {/* unused */}
-      {
-        this.state.account.isLogin ? (  // <- Todo: Router tsukaouze
-          loaded ? (
-              <div>
-                  <PaymentForm onPaymentSubmit={ e => this.addPayment(e) } />
-                  <KakeiboSheet payments={ payments } />
-              </div>
-            ) : (
-              <div>Loading...</div>
-            )
-          ) : (
-            <LoginForm />
-          )
-      }
-      </AccountContext.Provider>
+      <Router>
+        <AccountContext.Provider className="App" value={ this.state.account }> {/* unused */}
+          <nav>
+            <Link to="/">Home</Link>
+            |
+            <Link to="/settings/">Settings</Link>
+          </nav>
+
+          <Route path="/" exact component={() => this.renderHome()} />
+          <Route path="/settings/" component={() => (<p>Settings</p>)} />
+        </AccountContext.Provider>
+      </Router>
+    );
+  }
+
+  renderHome() {
+    const { loaded, payments } = this.state;
+    return loaded ? (
+      <div>
+          <PaymentForm onPaymentSubmit={ e => this.addPayment(e) } />
+          <KakeiboSheet payments={ payments } />
+      </div>
+    ) : (
+      <div>Loading...</div>
     );
   }
 }
