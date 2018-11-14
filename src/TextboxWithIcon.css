@@ -1,0 +1,19 @@
+.textbox-with-icon-container {
+  position: relative;
+}
+
+.textbox-with-icon-icon {
+  position: absolute;
+
+  padding: .375rem .75rem;
+}
+
+.textbox-with-icon-input {
+  width: 100%;
+  padding: .375rem .75rem .375rem 2.375rem;
+
+  border: solid 1px #ddd;
+  border-radius: 6px;
+
+  font-size: 1rem;
+}

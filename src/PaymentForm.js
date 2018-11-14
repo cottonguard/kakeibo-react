@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import TextboxWithIcon from './TextboxWithIcon'
+
 export default class extends Component {
   constructor(props) {
     super(props);
@@ -18,35 +20,32 @@ export default class extends Component {
       product: this.state.product,
       price: this.state.price
     });
-    /* *flux*
-    actions.addPayment({
-      product: this.state.product,
-      price: this.state.price
-    })
-    */
   }
 
   render() {
+    const { password, product, price } = this.state;
+
     return (
       <div className="payment-form">
         <div>
           <input type="text" placeholder="パスワード(仮)"
-           value={ this.state.password }
+           value={ password }
            onChange={ e => this.setState({ password: e.target.value }) }
           />
         </div>
 
         <div>
-          🍔
-          <input type="text" placeholder="なにに"
-           value={ this.state.product }
+          <TextboxWithIcon placeholder="なにに" className="asdf"
+           icon="🍔"
+           value={ product }
            onChange={ e => this.setState({ product: e.target.value }) }
           />
         </div>
+
         <div>
-          💰
-          <input type="text" placeholder="いくら"
-           value={ this.state.price }
+          <TextboxWithIcon type="text" placeholder="いくら"
+           icon="💰"
+           value={ price }
            onChange={ e => this.setState({ price: e.target.value }) }
           />
         </div>
